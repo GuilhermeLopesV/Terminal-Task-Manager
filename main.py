@@ -1,8 +1,5 @@
 from features_package.features import *
 
-# Problema nas tarefas concluídas, problama quando eu encerro o programa de forma forçada e impossibilidade de remover
-# tarefas marcadas como concluídas.
-
 def mini_trello():
 
     tasks, completed_tasks_list = load_data()
@@ -21,6 +18,8 @@ def mini_trello():
         elif command == '4':
             task_completed(tasks, completed_tasks_list)
         elif command == '5':
+            remove_completed_task(tasks, completed_tasks_list)
+        elif command == '6':
             print('Encerrando o Programa')
             break
         else:

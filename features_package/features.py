@@ -54,8 +54,9 @@ def terminal_commands():
     print('1 - Adicionar tarefa')
     print('2 - listar tarefa')
     print('3 - Remover tarefa')
-    print('4 - marcar tarefa como concluída')
-    print('5 - Sair')
+    print('4 - Marcar tarefa como concluída')
+    print('5 - Remover tarefa marcada como concluída ')
+    print('6 - Sair')
     print('\n')
 
 def add_task(tasks, completed_tasks_list):
@@ -154,5 +155,29 @@ def task_completed(task_lists, completed_tasks_list):
         else:
             print('Índice inválido.')
 
+    except ValueError:
+        print('Digite apenas números.')
+
+
+def remove_completed_task(tasks, completed_tasks_list):
+    if not completed_tasks_list:
+        print('Nenhuma tarefa cadastrada.')
+        return
+
+    print("Tarefas (ordem de criação):")
+    to_do_list_in_order(completed_tasks_list)
+
+    try:
+        remove = int(input('Qual é o número da tarefa que deseja remover: '))
+        real_index = remove - 1
+
+        if 0 <= real_index < len(completed_tasks_list):
+            removed = completed_tasks_list.pop(real_index)
+            print(f'Tarefa "{removed["nome"]}"| Prioridade: {removed["prioridade"]} removida com sucesso. ❌')
+
+            save_data(tasks, completed_tasks_list)
+
+        else:
+            print('Índice inválido.')
     except ValueError:
         print('Digite apenas números.')
