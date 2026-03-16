@@ -1,11 +1,33 @@
+import json
+
 tasks = []
 completed_tasks_list = []
+
 priorities = ('ALTA', 'MEDIA', 'BAIXA')
 order_of_priority = {
     "ALTA": 1,
     "MEDIA": 2,
     "BAIXA": 3
 }
+
+
+def save_data(tasks, completed_tasks_list):
+    data = {
+        'tasks': tasks,
+        'completed_tasks_list': completed_tasks_list,
+    }
+    with open("features_package/tasks.json", "w") as arquivo:
+        json.dump(data, arquivo, indent=4)
+
+
+
+def load_data():
+    with open("features_package/tasks.json", "r") as arquivo:
+        data = json.load(arquivo)
+
+    return data["tasks"], data["completed_tasks_list"]
+
+
 
 
 def to_do_list_by_priority(task_lists, **kwargs):
@@ -36,7 +58,7 @@ def terminal_commands():
     print('5 - Sair')
     print('\n')
 
-def add_task(to_do_list):
+def add_task(tasks, completed_tasks_list):
     try:
         task = input('Qual tarefa deseja adicionar: ').strip()
 
@@ -49,10 +71,13 @@ def add_task(to_do_list):
 
         if task:
             if task_priority in priorities:
-                to_do_list.append({
+                tasks.append({
                     "nome": task,
                     "prioridade": task_priority,
                 })
+
+                save_data(tasks, completed_tasks_list)
+
                 print('Tarefa adicionada com sucesso!')
             else:
                 print('Prioridade desconhecida!')
@@ -79,7 +104,7 @@ def list_tasks(to_do_list, tasks_completed):
         print('Nenhuma tarefa concluída')
     else:
         print('Suas Tarefas concluídas')
-        to_do_list_by_priority(completed_tasks_list, status="✅")
+        to_do_list_by_priority(tasks_completed, status="✅")
 
         print('\n')
 
@@ -100,13 +125,15 @@ def remove_task(task_lists):
             removed = task_lists.pop(real_index)
             print(f'Tarefa "{removed["nome"]}"| Prioridade: {removed["prioridade"]} removida com sucesso. ❌')
 
+            save_data(tasks, completed_tasks_list)
+
         else:
             print('Índice inválido.')
     except ValueError:
         print('Digite apenas números.')
 
 
-def task_completed(task_lists):
+def task_completed(task_lists, completed_tasks_list):
     if not task_lists:
         print('Nenhuma tarefa cadastrada.')
         return
@@ -122,6 +149,8 @@ def task_completed(task_lists):
             completed_tasks_list.append(task_lists[real_index])
             task_lists.pop(real_index)
             print('Tarefa concluida com sucesso.')
+
+            save_data(tasks, completed_tasks_list)
         else:
             print('Índice inválido.')
 
