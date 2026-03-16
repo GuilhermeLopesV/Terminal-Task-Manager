@@ -1,4 +1,4 @@
-tarefas = []
+tasks = []
 tarefas_concluidas_lista = []
 prioridades = ('ALTA', 'MEDIA', 'BAIXA')
 ordem_prioridade = {
@@ -6,6 +6,27 @@ ordem_prioridade = {
     "MEDIA": 2,
     "BAIXA": 3
 }
+
+
+def to_do_list_by_priority(task_lists, **kwargs):
+    status = kwargs.get("status", "")  # pega o status se existir
+
+    tarefas_ordenadas = sorted(
+        task_lists,
+        key=lambda task: ordem_prioridade[task["prioridade"]]
+    )
+
+    for i, tarefa in enumerate(tarefas_ordenadas, start=1):
+        print(f'{i} - {tarefa["nome"]} | Prioridade: {tarefa["prioridade"]} {status}')
+
+
+def to_do_list_in_order(task_lists):
+    for i, tarefa in enumerate(task_lists, start=1):
+        print(f'{i} - {tarefa["nome"]} | Prioridade: {tarefa["prioridade"]}')
+
+def bar_spacing():
+    print('----///----')
+
 
 def comandos():
     print('1 - Adicionar tarefa')
@@ -17,7 +38,11 @@ def comandos():
 
 def adicionar_tarefa(lista):
     try:
-        tarefa = input('Qual tarefa deseja adicionar: ')
+        tarefa = input('Qual tarefa deseja adicionar: ').strip()
+
+        if not tarefa:
+            print("Entrada vazia.")
+            return
 
         print('Tipos de prioridade: Alta, Media, Baixa')
         prioridade_da_tarefa = input('Prioridade da tarefa: ').upper()
@@ -40,63 +65,59 @@ def adicionar_tarefa(lista):
 
 
 
-
-def listar_tarefa(lista1, lista2):
-    if not lista1:
-        print('Nenhuma tarefa cadastrada.')
+def listar_tarefa(list1, list2):
+    if not list1:
+        print('Nenhuma tarefa cadastrada na lista de tarefas.')
+        if list2:
+            bar_spacing()
     else:
-        tarefas_ordenadas = sorted(
-            lista1,
-            key=lambda ta: ordem_prioridade[ta["prioridade"]]
-        )
+        to_do_list_by_priority(tasks)
 
-        for tarefa in tarefas_ordenadas:
-            print(f'{tarefa["nome"]} | Prioridade: {tarefa["prioridade"]}')
+    if not list2:
+        bar_spacing()
+        print('Nenhuma tarefa concluída')
+    else:
+        print('Suas Tarefas concluídas')
+        to_do_list_by_priority(tarefas_concluidas_lista, status="✅")
 
-        if lista2:
-            terminal_orgnizador()
-            print('Suas Tarefas concluídas')
-            for i, tarefa in enumerate(lista2, start=1):
-                print(f'{i} - {tarefa["nome"]} ✅')
+        print('\n')
 
-            print('\n')
 
-def remover_tarefa(lista):
-    if not lista:
+def remover_tarefa(task_lists):
+    if not task_lists:
         print('Nenhuma tarefa cadastrada.')
         return
 
-    for i, tarefa in enumerate(lista, start=1):
-        print(f'{i} - {tarefa}')
+    to_do_list_in_order(task_lists)
 
     try:
         remover = int(input('Qual é o número da tarefa que deseja remover: '))
         indice_real = remover - 1
 
-        if 0 <= indice_real < len(lista):
-            removida = lista.pop(indice_real)
-            print(f'Tarefa "{removida}" removida com sucesso.')
+        if 0 <= indice_real < len(task_lists):
+            removida = task_lists.pop(indice_real)
+            print(f'Tarefa "{removida["nome"]}"| Prioridade: {removida["prioridade"]} removida com sucesso. ❌')
+
         else:
             print('Índice inválido.')
     except ValueError:
         print('Digite apenas números.')
 
 
-def tarefa_concluida(lista):
-    if not lista:
+def tarefa_concluida(task_lists):
+    if not task_lists:
         print('Nenhuma tarefa cadastrada.')
         return
 
-    for i, tarefa in enumerate(lista, start=1):
-        print(f'{i} - {tarefa}')
+    to_do_list_in_order(task_lists)
 
     try:
         tarefa_c = int(input('Qual é o número da tarefa que deseja marca como concluída: '))
         indice_real = tarefa_c - 1
 
-        if 0 <= indice_real < len(lista):
-            tarefas_concluidas_lista.append(lista[indice_real])
-            lista.pop(indice_real)
+        if 0 <= indice_real < len(task_lists):
+            tarefas_concluidas_lista.append(task_lists[indice_real])
+            task_lists.pop(indice_real)
             print('Tarefa concluida com sucesso.')
         else:
             print('Índice inválido.')
