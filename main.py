@@ -3,19 +3,19 @@ from features_package.features import *
 def mini_trello():
 
     while True:
-        comandos()
+        terminal_commands()
 
-        comando = input('Digite um comando: ')
+        command = input('Digite um comando: ')
 
-        if comando == '1':
-            adicionar_tarefa(tasks)
-        elif comando == '2':
-            listar_tarefa(tasks, tarefas_concluidas_lista)
-        elif comando == '3':
-            remover_tarefa(tasks)
-        elif comando == '4':
-            tarefa_concluida(tasks)
-        elif comando == '5':
+        if command == '1':
+            add_task(tasks)
+        elif command == '2':
+            list_tasks(tasks, completed_tasks_list)
+        elif command == '3':
+            remove_task(tasks)
+        elif command == '4':
+            task_completed(tasks)
+        elif command == '5':
             print('Encerrando o Programa')
             break
         else:
