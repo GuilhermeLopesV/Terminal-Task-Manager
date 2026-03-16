@@ -36,7 +36,7 @@ def comandos():
     print('5 - Sair')
     print('\n')
 
-def adicionar_tarefa(lista):
+def adicionar_tarefa(to_do_list):
     try:
         tarefa = input('Qual tarefa deseja adicionar: ').strip()
 
@@ -49,7 +49,7 @@ def adicionar_tarefa(lista):
 
         if tarefa:
             if prioridade_da_tarefa in prioridades:
-                lista.append({
+                to_do_list.append({
                     "nome": tarefa,
                     "prioridade": prioridade_da_tarefa,
                 })
@@ -65,15 +65,16 @@ def adicionar_tarefa(lista):
 
 
 
-def listar_tarefa(list1, list2):
-    if not list1:
+def listar_tarefa(to_do_list, tasks_completed):
+    if not to_do_list:
+
         print('Nenhuma tarefa cadastrada na lista de tarefas.')
-        if list2:
+        if tasks_completed:
             bar_spacing()
     else:
-        to_do_list_by_priority(tasks)
+        to_do_list_by_priority(to_do_list)
 
-    if not list2:
+    if not tasks_completed:
         bar_spacing()
         print('Nenhuma tarefa concluída')
     else:
@@ -88,6 +89,7 @@ def remover_tarefa(task_lists):
         print('Nenhuma tarefa cadastrada.')
         return
 
+    print("Tarefas (ordem de criação):")
     to_do_list_in_order(task_lists)
 
     try:
@@ -109,6 +111,7 @@ def tarefa_concluida(task_lists):
         print('Nenhuma tarefa cadastrada.')
         return
 
+    print("Tarefas (ordem de criação):")
     to_do_list_in_order(task_lists)
 
     try:
@@ -124,6 +127,3 @@ def tarefa_concluida(task_lists):
 
     except ValueError:
         print('Digite apenas números.')
-
-def terminal_orgnizador():
-    print('\n' * 2)
