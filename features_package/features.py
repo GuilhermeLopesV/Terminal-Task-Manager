@@ -1,8 +1,5 @@
 import json
 
-tasks = []
-completed_tasks_list = []
-
 priorities = ('ALTA', 'MEDIA', 'BAIXA')
 order_of_priority = {
     "ALTA": 1,
@@ -22,13 +19,12 @@ def save_data(tasks, completed_tasks_list):
 
 
 def load_data():
-    with open("features_package/tasks.json", "r") as arquivo:
-        data = json.load(arquivo)
-
-    return data["tasks"], data["completed_tasks_list"]
-
-
-
+    try:
+        with open("features_package/tasks.json", "r") as arquivo:
+            data = json.load(arquivo)
+        return data["tasks"], data["completed_tasks_list"]
+    except FileNotFoundError:
+        return [], []
 
 def to_do_list_by_priority(task_lists, **kwargs):
     status = kwargs.get("status", "")  # pega o status se existir
@@ -91,39 +87,39 @@ def add_task(tasks, completed_tasks_list):
 
 
 
-def list_tasks(to_do_list, tasks_completed):
-    if not to_do_list:
+def list_tasks(tasks, completed_tasks_list):
+    if not tasks:
 
         print('Nenhuma tarefa cadastrada na lista de tarefas.')
-        if tasks_completed:
+        if completed_tasks_list:
             bar_spacing()
     else:
-        to_do_list_by_priority(to_do_list)
+        to_do_list_by_priority(tasks)
 
-    if not tasks_completed:
+    if not completed_tasks_list:
         bar_spacing()
         print('Nenhuma tarefa concluída')
     else:
         print('Suas Tarefas concluídas')
-        to_do_list_by_priority(tasks_completed, status="✅")
+        to_do_list_by_priority(completed_tasks_list, status="✅")
 
         print('\n')
 
 
-def remove_task(task_lists):
-    if not task_lists:
+def remove_task(tasks, completed_tasks_list):
+    if not tasks:
         print('Nenhuma tarefa cadastrada.')
         return
 
     print("Tarefas (ordem de criação):")
-    to_do_list_in_order(task_lists)
+    to_do_list_in_order(tasks)
 
     try:
         remove = int(input('Qual é o número da tarefa que deseja remover: '))
         real_index = remove - 1
 
-        if 0 <= real_index < len(task_lists):
-            removed = task_lists.pop(real_index)
+        if 0 <= real_index < len(tasks):
+            removed = tasks.pop(real_index)
             print(f'Tarefa "{removed["nome"]}"| Prioridade: {removed["prioridade"]} removida com sucesso. ❌')
 
             save_data(tasks, completed_tasks_list)
@@ -134,21 +130,21 @@ def remove_task(task_lists):
         print('Digite apenas números.')
 
 
-def task_completed(task_lists, completed_tasks_list):
-    if not task_lists:
+def task_completed(tasks, completed_tasks_list):
+    if not tasks:
         print('Nenhuma tarefa cadastrada.')
         return
 
     print("Tarefas (ordem de criação):")
-    to_do_list_in_order(task_lists)
+    to_do_list_in_order(tasks)
 
     try:
         task_that_will_be_marked_as_completed = int(input('Qual é o número da tarefa que deseja marca como concluída: '))
         real_index = task_that_will_be_marked_as_completed - 1
 
-        if 0 <= real_index < len(task_lists):
-            completed_tasks_list.append(task_lists[real_index])
-            task_lists.pop(real_index)
+        if 0 <= real_index < len(tasks):
+            completed_tasks_list.append(tasks[real_index])
+            tasks.pop(real_index)
             print('Tarefa concluida com sucesso.')
 
             save_data(tasks, completed_tasks_list)
