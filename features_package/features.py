@@ -2,7 +2,7 @@ import time
 from data_package.data_features import save_data
 from features_package.utils import bar_spacing
 
-def scheduled_time():
+def get_current_time():
     return time.strftime('%d/%m/%Y %H:%M:%S')
 
 priorities = ('ALTA', 'MEDIA', 'BAIXA')
@@ -62,7 +62,7 @@ def add_task(tasks, completed_tasks_list):
                 tasks.append({
                     "nome": task,
                     "prioridade": task_priority,
-                    "horario": scheduled_time()
+                    "horario": get_current_time()
 
                 })
 
@@ -96,7 +96,7 @@ def list_tasks(tasks, completed_tasks_list):
         print('Suas Tarefas concluídas')
         to_do_list_by_priority(completed_tasks_list, status="✅")
 
-        screen_stop = input('Aperte Enter para sair ...')
+        input('Aperte Enter para continuar...')
 
 
 def remove_task(tasks, completed_tasks_list):
