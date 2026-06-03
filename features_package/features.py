@@ -1,4 +1,9 @@
-import json
+import time
+from data_package.data_features import save_data
+from features_package.utils import bar_spacing
+
+def scheduled_time():
+    return time.strftime('%d/%m/%Y %H:%M:%S')
 
 priorities = ('ALTA', 'MEDIA', 'BAIXA')
 order_of_priority = {
@@ -7,27 +12,8 @@ order_of_priority = {
     "BAIXA": 3
 }
 
-
-def save_data(tasks, completed_tasks_list):
-    data = {
-        'tasks': tasks,
-        'completed_tasks_list': completed_tasks_list,
-    }
-    with open("features_package/tasks.json", "w") as arquivo:
-        json.dump(data, arquivo, indent=4)
-
-
-
-def load_data():
-    try:
-        with open("features_package/tasks.json", "r") as arquivo:
-            data = json.load(arquivo)
-        return data["tasks"], data["completed_tasks_list"]
-    except FileNotFoundError:
-        return [], []
-
 def to_do_list_by_priority(task_lists, **kwargs):
-    status = kwargs.get("status", "")  # pega o status se existir
+    status = kwargs.get("status", "")
 
     ordered_tasks = sorted(
         task_lists,
@@ -35,15 +21,20 @@ def to_do_list_by_priority(task_lists, **kwargs):
     )
 
     for i, task in enumerate(ordered_tasks, start=1):
-        print(f'{i} - {task["nome"]} | Prioridade: {task["prioridade"]} {status}')
+        print(f"[{i}] {task['nome']}")
+        print(f"    Prioridade: {task['prioridade']} {status}")
+        print(f"    Criado em: {task['horario']}")
+        print("-" * 25)
 
 
-def to_do_list_in_order(task_lists):
+def to_do_list_in_order(task_lists, **kwargs):
+    status = kwargs.get("status", "")
+
     for i, task in enumerate(task_lists, start=1):
-        print(f'{i} - {task["nome"]} | Prioridade: {task["prioridade"]}')
-
-def bar_spacing():
-    print('----///----')
+        print(f"[{i}] {task['nome']}")
+        print(f"    Prioridade: {task['prioridade']} {status}")
+        print(f"    Criado em: {task['horario']}")
+        print("-" * 25)
 
 
 def terminal_commands():
@@ -71,6 +62,8 @@ def add_task(tasks, completed_tasks_list):
                 tasks.append({
                     "nome": task,
                     "prioridade": task_priority,
+                    "horario": scheduled_time()
+
                 })
 
                 save_data(tasks, completed_tasks_list)
@@ -92,7 +85,7 @@ def list_tasks(tasks, completed_tasks_list):
 
         print('Nenhuma tarefa cadastrada na lista de tarefas.')
         if completed_tasks_list:
-            bar_spacing()
+             bar_spacing()
     else:
         to_do_list_by_priority(tasks)
 
@@ -103,7 +96,7 @@ def list_tasks(tasks, completed_tasks_list):
         print('Suas Tarefas concluídas')
         to_do_list_by_priority(completed_tasks_list, status="✅")
 
-        print('\n')
+        screen_stop = input('Aperte Enter para sair ...')
 
 
 def remove_task(tasks, completed_tasks_list):

@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+
+# PyCharm / IDEs
+.idea/
+
+# Outros úteis
+.env

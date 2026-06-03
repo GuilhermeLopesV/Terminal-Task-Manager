@@ -1,26 +1,35 @@
-import features_package.features as features
+from features_package.features import (
+    add_task,
+    list_tasks,
+    remove_task,
+    task_completed,
+    terminal_commands,
+    remove_completed_task,
+)
 
+
+from data_package.data_features import load_data
 
 
 def mini_trello():
 
-    tasks, completed_tasks_list = features.load_data()
+    tasks, completed_tasks_list = load_data()
 
     while True:
-        features.terminal_commands()
+        terminal_commands()
 
         command = input('Digite um comando: ')
 
         if command == '1':
-            features.add_task(tasks, completed_tasks_list)
+            add_task(tasks, completed_tasks_list)
         elif command == '2':
-            features.list_tasks(tasks, completed_tasks_list)
+            list_tasks(tasks, completed_tasks_list)
         elif command == '3':
-            features.remove_task(tasks, completed_tasks_list)
+            remove_task(tasks, completed_tasks_list)
         elif command == '4':
-            features.task_completed(tasks, completed_tasks_list)
+            task_completed(tasks, completed_tasks_list)
         elif command == '5':
-            features.remove_completed_task(tasks, completed_tasks_list)
+           remove_completed_task(tasks, completed_tasks_list)
         elif command == '6':
             print('Encerrando o Programa')
             break

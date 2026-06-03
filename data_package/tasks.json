@@ -1,0 +1,26 @@
+{
+    "tasks": [
+        {
+            "nome": "Futebol",
+            "prioridade": "MEDIA",
+            "horario": "30/04/2026 00:48:09"
+        },
+        {
+            "nome": "Lavar a lou\u00e7a",
+            "prioridade": "ALTA",
+            "horario": "30/04/2026 20:04:21"
+        },
+        {
+            "nome": "Jogar bola",
+            "prioridade": "MEDIA",
+            "horario": "03/06/2026 19:34:20"
+        }
+    ],
+    "completed_tasks_list": [
+        {
+            "nome": "Estudar",
+            "prioridade": "ALTA",
+            "horario": "30/04/2026 00:55:19"
+        }
+    ]
+}
