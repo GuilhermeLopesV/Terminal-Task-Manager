@@ -4,16 +4,15 @@ from features_package.features import (
     remove_task,
     task_completed,
     terminal_commands,
-    remove_completed_task,
 )
 
 
 from data_package.data_features import load_data
 
 
-def mini_trello():
+def terminal_task_manager():
 
-    tasks, completed_tasks_list = load_data()
+    tasks = load_data()
 
     while True:
         terminal_commands()
@@ -21,16 +20,14 @@ def mini_trello():
         command = input('Digite um comando: ')
 
         if command == '1':
-            add_task(tasks, completed_tasks_list)
+            add_task(tasks)
         elif command == '2':
-            list_tasks(tasks, completed_tasks_list)
+            list_tasks(tasks)
         elif command == '3':
-            remove_task(tasks, completed_tasks_list)
+            remove_task(tasks)
         elif command == '4':
-            task_completed(tasks, completed_tasks_list)
+            task_completed(tasks)
         elif command == '5':
-           remove_completed_task(tasks, completed_tasks_list)
-        elif command == '6':
             print('Encerrando o Programa')
             break
         else:
@@ -38,4 +35,5 @@ def mini_trello():
 
         print('\n')
 
-mini_trello()
+
+terminal_task_manager()

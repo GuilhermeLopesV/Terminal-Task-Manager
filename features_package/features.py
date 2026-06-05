@@ -1,6 +1,6 @@
 import time
 from data_package.data_features import save_data
-from features_package.utils import bar_spacing
+
 
 def get_current_time():
     return time.strftime('%d/%m/%Y %H:%M:%S')
@@ -12,41 +12,50 @@ order_of_priority = {
     "BAIXA": 3
 }
 
-def to_do_list_by_priority(task_lists, **kwargs):
-    status = kwargs.get("status", "")
+order_of_status = {
+    "pendente": 1,
+    "concluída": 2
+}
 
+def to_do_list_by_priority(task_lists):
     ordered_tasks = sorted(
         task_lists,
-        key=lambda task: order_of_priority[task["prioridade"]]
+        key=lambda task: (
+            order_of_status[task["status"]],
+            order_of_priority[task["prioridade"]]
+        )
     )
 
     for i, task in enumerate(ordered_tasks, start=1):
-        print(f"[{i}] {task['nome']}")
-        print(f"    Prioridade: {task['prioridade']} {status}")
+        emoji = "⏳" if task["status"] == "pendente" else "✅"
+
+        print(f"[{i}] Tarefa: {task['nome']}")
+        print(f"    Prioridade: {task['prioridade']}")
+        print(f"    Status: {task['status']} {emoji}")
         print(f"    Criado em: {task['horario']}")
         print("-" * 25)
 
 
 def to_do_list_in_order(task_lists, **kwargs):
-    status = kwargs.get("status", "")
 
     for i, task in enumerate(task_lists, start=1):
-        print(f"[{i}] {task['nome']}")
-        print(f"    Prioridade: {task['prioridade']} {status}")
+        emoji = "⏳" if task["status"] == "pendente" else "✅"
+
+        print(f"[{i}] Tarefa: {task['nome']}")
+        print(f"    Prioridade: {task['prioridade']}")
+        print(f"    Status: {task['status']} {emoji}")
         print(f"    Criado em: {task['horario']}")
         print("-" * 25)
-
 
 def terminal_commands():
     print('1 - Adicionar tarefa')
     print('2 - listar tarefa')
     print('3 - Remover tarefa')
     print('4 - Marcar tarefa como concluída')
-    print('5 - Remover tarefa marcada como concluída ')
-    print('6 - Sair')
+    print('5 - Sair')
     print('\n')
 
-def add_task(tasks, completed_tasks_list):
+def add_task(tasks):
     try:
         task = input('Qual tarefa deseja adicionar: ').strip()
 
@@ -62,11 +71,12 @@ def add_task(tasks, completed_tasks_list):
                 tasks.append({
                     "nome": task,
                     "prioridade": task_priority,
+                    "status": "pendente",
                     "horario": get_current_time()
 
                 })
 
-                save_data(tasks, completed_tasks_list)
+                save_data(tasks)
 
                 print('Tarefa adicionada com sucesso!')
             else:
@@ -80,26 +90,19 @@ def add_task(tasks, completed_tasks_list):
 
 
 
-def list_tasks(tasks, completed_tasks_list):
+def list_tasks(tasks):
     if not tasks:
 
         print('Nenhuma tarefa cadastrada na lista de tarefas.')
-        if completed_tasks_list:
-             bar_spacing()
+
+
     else:
+        print('Lista de tarefas:')
         to_do_list_by_priority(tasks)
-
-    if not completed_tasks_list:
-        bar_spacing()
-        print('Nenhuma tarefa concluída')
-    else:
-        print('Suas Tarefas concluídas')
-        to_do_list_by_priority(completed_tasks_list, status="✅")
-
         input('Aperte Enter para continuar...')
 
 
-def remove_task(tasks, completed_tasks_list):
+def remove_task(tasks):
     if not tasks:
         print('Nenhuma tarefa cadastrada.')
         return
@@ -115,7 +118,7 @@ def remove_task(tasks, completed_tasks_list):
             removed = tasks.pop(real_index)
             print(f'Tarefa "{removed["nome"]}"| Prioridade: {removed["prioridade"]} removida com sucesso. ❌')
 
-            save_data(tasks, completed_tasks_list)
+            save_data(tasks)
 
         else:
             print('Índice inválido.')
@@ -123,7 +126,7 @@ def remove_task(tasks, completed_tasks_list):
         print('Digite apenas números.')
 
 
-def task_completed(tasks, completed_tasks_list):
+def task_completed(tasks):
     if not tasks:
         print('Nenhuma tarefa cadastrada.')
         return
@@ -136,37 +139,12 @@ def task_completed(tasks, completed_tasks_list):
         real_index = task_that_will_be_marked_as_completed - 1
 
         if 0 <= real_index < len(tasks):
-            completed_tasks_list.append(tasks[real_index])
-            tasks.pop(real_index)
+            tasks[real_index]["status"] = "concluída"
             print('Tarefa concluida com sucesso.')
 
-            save_data(tasks, completed_tasks_list)
+            save_data(tasks)
         else:
             print('Índice inválido.')
 
-    except ValueError:
-        print('Digite apenas números.')
-
-
-def remove_completed_task(tasks, completed_tasks_list):
-    if not completed_tasks_list:
-        print('Nenhuma tarefa cadastrada.')
-        return
-
-    print("Tarefas (ordem de criação):")
-    to_do_list_in_order(completed_tasks_list)
-
-    try:
-        remove = int(input('Qual é o número da tarefa que deseja remover: '))
-        real_index = remove - 1
-
-        if 0 <= real_index < len(completed_tasks_list):
-            removed = completed_tasks_list.pop(real_index)
-            print(f'Tarefa "{removed["nome"]}"| Prioridade: {removed["prioridade"]} removida com sucesso. ❌')
-
-            save_data(tasks, completed_tasks_list)
-
-        else:
-            print('Índice inválido.')
     except ValueError:
         print('Digite apenas números.')
