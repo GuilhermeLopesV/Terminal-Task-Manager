@@ -36,7 +36,7 @@ def to_do_list_by_priority(task_lists):
         print("-" * 25)
 
 
-def to_do_list_in_order(task_lists, **kwargs):
+def to_do_list_in_order(task_lists):
 
     for i, task in enumerate(task_lists, start=1):
         emoji = "⏳" if task["status"] == "pendente" else "✅"

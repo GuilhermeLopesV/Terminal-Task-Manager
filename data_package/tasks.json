@@ -1,16 +1,3 @@
 {
-    "tasks": [
-        {
-            "nome": "Bom dia",
-            "prioridade": "ALTA",
-            "status": "pendente",
-            "horario": "04/06/2026 20:01:34"
-        },
-        {
-            "nome": "mkkk",
-            "prioridade": "BAIXA",
-            "status": "conclu\u00edda",
-            "horario": "04/06/2026 20:06:27"
-        }
-    ]
+    "tasks": []
 }
